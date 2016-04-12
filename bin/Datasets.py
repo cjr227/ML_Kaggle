@@ -108,7 +108,6 @@ class Datasets:
         for col in range(self.featuresFactorized.shape[1]):
             normalizedFeatures[:,col] = (normalizedFeatures[:,col] - normalizedFeatures[:,col].mean())/normalizedFeatures[:,col].std()
             if col == len(self.numericFeatures) - 1:
-                print 'setting normalizeNumeric'
                 self.featuresNormalizeNumeric = normalizedFeatures.copy()
         self.featuresNormalizeAll = normalizedFeatures
         
