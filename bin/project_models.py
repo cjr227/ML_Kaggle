@@ -12,7 +12,9 @@ from sklearn.grid_search import RandomizedSearchCV
 from sklearn import metrics
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier,AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.lda import LDA
 
 # LOAD DATA
 with open("featuresFactorized.npy/featuresFactorized.npy", "rb") as npy:
@@ -133,6 +135,44 @@ X_train_PCA = pca.fit_transform(X_train)
 clf = RandomForestClassifier(random_state=42,n_jobs=-1,
 				class_weight="balanced",
 				n_components=best_parameters["model__n_estimators"])
+
+# RUN MODEL WITH OPTIMIZED PARAMETERS
+clf = clf.fit(X_train_PCA, y_train)
+
+
+# MAKE PREDICTIONS ON HOLDOUT DATA
+X_hold_PCA = pca.transform(X_hold)
+y_hold_predict = clf.predict(X_hold_PCA)
+
+
+##### MODEL 4: ADABOOST #####
+clf = Pipeline([('reduce_dim', PCA()),
+                ('model', AdaBoostClassifier(random_state=42))
+ ])
+
+param_dist = {"reduce_dim__n_components": randint(2, 50),
+              "model__n_estimators": randint(5, 200),
+			  "model__learning_rate": [expon(scale=.1),1],
+			  "model__base_estimator": [DecisionTreeClassifier(),
+			                            SGDClassifier(random_state=42,
+										n_jobs=-1),
+										LDA()]}
+
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+                                   n_iter=n_iter_search,cv=cv_call,
+								   scoring='accuracy')
+
+random_search = random_search.fit(X_train, y_train)
+
+# RETRIEVE OPTIMAL HYPERPARAMETER VALUES FROM RANDOM SEARCH
+best_parameters, score, _ = max(random_search.grid_scores_, key=lambda x: x[1])
+pca = PCA(n_components = best_parameters["reduce_dim__n_components"])
+_ = pca.fit(X_train)
+X_train_PCA = pca.fit_transform(X_train)
+clf =  AdaBoostClassifier(random_state=42,
+                         n_estimators=best_parameters["model__n_estimators"],
+						 learning_rate=best_parameters["model__learning_rate"],
+						 base_estimator=best_parameters["model__base_estimator"])
 
 # RUN MODEL WITH OPTIMIZED PARAMETERS
 clf = clf.fit(X_train_PCA, y_train)
