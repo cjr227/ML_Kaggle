@@ -12,6 +12,7 @@ from sklearn.grid_search import RandomizedSearchCV
 from sklearn import metrics
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestClassifier
 
 # LOAD DATA
 with open("featuresFactorized.npy/featuresFactorized.npy", "rb") as npy:
@@ -66,3 +67,77 @@ y_hold_predict = clf.predict(X_hold_PCA)
 print("Residual sum of squares: %.2f"
       % np.mean((y_hold_predict - y_hold) ** 2))
 
+
+##### MODEL 2: SUPPORT VECTOR MACHINE #####
+
+# RUN RANDOMIZED SEARCH FOR HYPERPARAMETER OPTIMIZATION
+
+clf = Pipeline([('reduce_dim', PCA()),
+                ('model', SGDClassifier(n_iter=5, random_state=42,n_jobs=-1,
+				class_weight="balanced"))
+ ])
+
+param_dist = {"reduce_dim__n_components": randint(2, 50),
+              "model__alpha": expon(scale=.1),
+              "model__loss": ["hinge","log","modified_huber"],
+	      "model__penalty": ["l2","elasticnet"]}
+
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+                                   n_iter=n_iter_search,cv=cv_call,
+								   scoring='f1')
+
+random_search = random_search.fit(X_train, y_train)
+
+# RETRIEVE OPTIMAL HYPERPARAMETER VALUES FROM RANDOM SEARCH
+best_parameters, score, _ = max(random_search.grid_scores_, key=lambda x: x[1])
+pca = PCA(n_components = best_parameters["reduce_dim__n_components"])
+_ = pca.fit(X_train)
+X_train_PCA = pca.fit_transform(X_train)
+clf = SGDClassifier(n_iter=5, random_state=42,n_jobs=-1,
+                    alpha=best_parameters["model__alpha"],
+					loss=best_parameters["model__loss"],
+					penalty=best_parameters["model__penalty"],
+					class_weight="balanced")
+
+# RUN MODEL WITH OPTIMIZED PARAMETERS
+clf = clf.fit(X_train_PCA, y_train)
+
+
+# MAKE PREDICTIONS ON HOLDOUT DATA
+X_hold_PCA = pca.transform(X_hold)
+y_hold_predict = clf.predict(X_hold_PCA)
+
+##### MODEL 3: RANDOM FOREST #####
+
+
+# RUN RANDOMIZED SEARCH FOR HYPERPARAMETER OPTIMIZATION
+clf = Pipeline([('reduce_dim', PCA()),
+                ('model', RandomForestClassifier(random_state=42,n_jobs=-1,
+				class_weight="balanced"))
+ ])
+
+param_dist = {"reduce_dim__n_components": randint(2, 50),
+              "model__n_estimators": randint(5, 200)}
+
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
+                                   n_iter=n_iter_search,cv=cv_call,
+								   scoring='accuracy')
+
+random_search = random_search.fit(X_train, y_train)
+
+# RETRIEVE OPTIMAL HYPERPARAMETER VALUES FROM RANDOM SEARCH
+best_parameters, score, _ = max(random_search.grid_scores_, key=lambda x: x[1])
+pca = PCA(n_components = best_parameters["reduce_dim__n_components"])
+_ = pca.fit(X_train)
+X_train_PCA = pca.fit_transform(X_train)
+clf = RandomForestClassifier(random_state=42,n_jobs=-1,
+				class_weight="balanced",
+				n_components=best_parameters["model__n_estimators"])
+
+# RUN MODEL WITH OPTIMIZED PARAMETERS
+clf = clf.fit(X_train_PCA, y_train)
+
+
+# MAKE PREDICTIONS ON HOLDOUT DATA
+X_hold_PCA = pca.transform(X_hold)
+y_hold_predict = clf.predict(X_hold_PCA)
