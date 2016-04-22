@@ -3,7 +3,7 @@
 import csv
 import pandas as pd
 import numpy as np
-from scipy.stats import randint
+from scipy.stats import randint, expon
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import SGDClassifier
@@ -12,7 +12,7 @@ from sklearn.grid_search import RandomizedSearchCV
 from sklearn import metrics
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestClassifier,AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.lda import LDA
 
