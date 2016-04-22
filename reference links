@@ -1,6 +1,8 @@
 #tips for dealing with dimension reduction and managing data size
 https://www.kaggle.com/c/avazu-ctr-prediction/forums/t/10987/dealing-with-data-size
 
+#research paper using the same data set
+http://people.cs.uchicago.edu/~dinoj/svmhmmda.pdf
 
 #interview with Kaggle CEO/Founder on best models to win competitions
 https://www.import.io/post/how-to-win-a-kaggle-competition/
