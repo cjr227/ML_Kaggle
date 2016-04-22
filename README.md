@@ -8,3 +8,8 @@ The following features were dropped from our data set:
 56 & 57: concatenation represented in feature 58
 29, 31, 32, 35: all entries were 1. There's nothing much we can learn from this.
 
+
+Feature descriptions:
+Feature 18 is described here. 12 possible entries (13 including null)
+http://groups.inf.ed.ac.uk/maptask/interface/expl.html
+
