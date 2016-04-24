@@ -23,3 +23,5 @@ http://groups.inf.ed.ac.uk/maptask/interface/expl.html
 A nice tabular description of features 8 and 17 (both dialogue moves) can be found in Table 1 here.
 http://people.cs.uchicago.edu/~dinoj/svmhmmda.pdf
 
+our final submission ended up not using PCA and not using AdaBoost. we were able to get to  90%+ accuracy by doing manual feature reduction (see above documentation), limiting the features that were binarized, and only using the random forest algorithm. the features we binarized using panda's get_dummies were features 8,17,18,20,23,25,26 and 58.
+
