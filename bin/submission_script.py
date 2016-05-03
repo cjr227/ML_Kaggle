@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from __future__ import print_function
 import csv
 import pandas as pd
 import numpy as np
