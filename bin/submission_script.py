@@ -54,6 +54,6 @@ if __name__ == '__main__':
     preds = clf.predict(X_dum_test_2)
     
     # SUBMISSION FILE
-    idx = range(1,n_test)
+    idx = range(1,31710)
     submission = pd.DataFrame({"id": idx, "prediction": preds})
     submission.to_csv(argv[3], index=False)
