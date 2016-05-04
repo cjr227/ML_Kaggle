@@ -60,7 +60,7 @@ n_iter_search = 30
 # RUN RANDOMIZED SEARCH FOR HYPERPARAMETER OPTIMIZATION
 clf = RandomForestClassifier(random_state=42,n_jobs=-1)
 
-param_dist = {n_estimators": randint(5, 200)}
+param_dist = {"n_estimators": randint(5, 200)}
 
 random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
                                    n_iter=n_iter_search,cv=cv_call,
