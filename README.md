@@ -4,7 +4,7 @@ This paper describes the data processing, feature reduction, model selection
 through cross validation and finally presents the model with minimal prediction error
 on the HCRC (Human Communication Research Centre) Map Task corpus dataset. This
 experiment was conducted for the [Spring 2016 Machine Learning course (COMS 4721)
-predictive modeling project] (https://inclass.kaggle.com/c/coms4721spring2016), where the final predictions were submitted to Kaggle for competition
+predictive modeling project](https://inclass.kaggle.com/c/coms4721spring2016), where the final predictions were submitted to Kaggle for competition
 among students. We attempted to reduce the feature dimensionality by applying
 a combination of descriptive statistics and feature research for a manual feature selection
 and Lasso Regression and PCA as reduction algorithms. The manual feature selection
